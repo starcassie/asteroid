@@ -7,6 +7,8 @@ let lasers = []
 let makeRockCounter = 1000
 let countRocks = 3
 let hey
+let text = $('.over')
+let button = $('button')
 
 let keyPressed = {}
 // check for user input
@@ -22,19 +24,19 @@ function checkCollide() {
   let value = false
   rocks.forEach(function checkInner(rock) {
     lasers.forEach(function check(laser) {
-      if ((laser.y + 3 >= rock.y - rock.size/2 && laser.y + 3 <= rock.y + rock.size/2) || (laser.y - 3 <= rock.y + rock.size/2 && laser.y - 3 >= rock.y - rock.size/2)) {
-        if ((laser.x + 3 >= rock.x - rock.size/2 && laser.x + 3 <= rock.x + rock.size/2) || (laser.x - 3 >= rock.x - rock.size/2 && laser.x - 3 <= rock.x + rock.size/2)) {
-          rocks.splice(rocks.indexOf(rock), 1)
-          countRocks -= 1
-          lasers.splice(lasers.indexOf(laser), 1)
+      if (Math.sqrt(Math.pow(laser.y - rock.y, 2) + Math.pow(laser.x - rock.x, 2)) <= (rock.size/2)) {
+        rocks.splice(rocks.indexOf(rock), 1)
+        countRocks -= 1
+        lasers.splice(lasers.indexOf(laser), 1)
+        if (rock.size > 70) {
+          rocks.push(new Rock(rock.x, rock.y, rock.size/2))
+          rocks.push(new Rock(rock.x, rock.y, rock.size/2))
         }
       }
     })
-    if ((ship.y + 25 >= rock.y - rock.size/2 && ship.y + 25 <= rock.y + rock.size/2) || (ship.y - 25 <= rock.y + rock.size/2 && ship.y - 25 >= rock.y - rock.size/2)) {
-      if ((ship.x + 25 >= rock.x - rock.size/2 && ship.x + 25 <= rock.x + rock.size/2) || (ship.x - 25 >= rock.x - rock.size/2 && ship.x - 25 <= rock.x + rock.size/2)) {
+    if (Math.sqrt(Math.pow(ship.y - rock.y, 2) + Math.pow(ship.x - rock.x, 2)) <= (rock.size/2 + ship.size/2)) {
         console.log("collision")
         value = true
-      }
     }
   })
   if (value) {
@@ -80,6 +82,7 @@ function loop() {
   if (checkCollide()) {
     console.log("stop")
     clearTimeout(hey)
+    text.toggleClass("hidden")
   } else {
     hey = setTimeout(() => loop(), 1000 / 60)
   }
@@ -94,3 +97,16 @@ async function loadGame() {
   console.log("here")
 }
 loadGame()
+
+function startAgain() {
+  console.log("researt")
+  text.toggleClass("hidden")
+  ship = new Ship()
+  rocks = [new Rock(), new Rock(), new Rock()]
+  lasers = []
+  makeRockCounter = 1000
+  countRocks = 3
+  loadGame()
+}
+
+button.on("click", startAgain)

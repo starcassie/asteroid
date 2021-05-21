@@ -1,12 +1,21 @@
 
 class Rock {
-	constructor() {
-		this.sprite = rockSprite.image
-		this.x = (Math.random() * canvas.width)
-		this.y = (Math.random() * canvas.height)
-		this.dx = (Math.random() * 6) - 3
-		this.dy = (Math.random() * 6) - 3
-		this.size = Math.random() * 50 + 80
+	constructor(xS, yS, sizeS) {
+		if (typeof xS !== "undefined") {
+			this.sprite = rockSprite.image
+			this.x = xS
+			this.y = yS
+			this.dx = (Math.random() * 6) - 3
+			this.dy = (Math.random() * 6) - 3
+			this.size = sizeS
+		} else {
+			this.sprite = rockSprite.image
+			this.x = (ship.x + ship.size * 4 + Math.random() * (canvas.width - ship.size * 8)) % canvas.width
+			this.y = (ship.y + ship.size * 4 + Math.random() * (canvas.height - ship.size * 8)) % canvas.height
+			this.dx = (Math.random() * 6) - 3
+			this.dy = (Math.random() * 6) - 3
+			this.size = Math.random() * 50 + 80
+		}
 	}
 
 	step() {
